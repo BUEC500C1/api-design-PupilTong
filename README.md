@@ -2,13 +2,20 @@
 api-design-PupilTong created by GitHub Classroom
 
 ## Preparation
-download essential files
+### download essential files
 ```bash
 git clone https://github.com/BUEC500C1/api-design-PupilTong.git
 ```
 Import to your codes
 ```python
 import airportWeather
+```
+### register an API key of Open Weather
+check https://openweathermap.org/ for more infomation
+
+create a new python file 'apikeys.py' in the API's root directory, and put your api key into the file like this:
+```python
+openWeatherKeys="yourownkey"
 ```
 ## instructions
 ### Initilization Object
