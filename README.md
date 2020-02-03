@@ -4,6 +4,7 @@ api-design-PupilTong created by GitHub Classroom
 ## Preparation
 ### download essential files
 ```bash
+git clone https://github.com/datasets/airport-codes.git
 git clone https://github.com/BUEC500C1/api-design-PupilTong.git
 ```
 Import to your codes
