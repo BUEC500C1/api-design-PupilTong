@@ -22,9 +22,9 @@ apw = airportWeather("BOS")
 
 #### Object Initilization parameter
 
-airportIATACode : String. Set the airport.
+* **airportIATACode** : String. Set the airport.
 
-openWeatherKeys : String. Your own openweather key.
+* **openWeatherKeys** : String. Your own openweather key.
 ### Get airports Information
 ```python
 airportWeather("BOS").GetAirportInfo()
@@ -165,4 +165,43 @@ The return of this method will be a json string, like this
 ```
 #### Method parameter
 
-hours : integer. How many hourly weather forcast from now you want to get.
+* **hours** : integer. How many hourly weather forcast from now you want to get.
+### Get historical weather
+Get historical weather of the airport. Data comes form https://api.weather.gov/.
+```python
+airportWeather("ORD").GetHistoricalWeather("2020-02-01T23:00:00-06:00","2020-02-02T23:00:00-06:00",2)
+#Get weather information form 2020-02-01T23:00:00 to 2020-02-02T23:00:00 and set 2 as the maxium data count.
+```
+The return of this method will be a json string, like this
+```json
+[{
+	"number": 1,
+	"name": "",
+	"startTime": "2020-02-03T04:55:00+00:00",
+	"endTime": "2020-02-03T04:55:00+00:00",
+	"timestamp": "2020-02-03T04:55:00+00:00",
+	"temperature": 2.2000000000000455,
+	"temperatureUnit": "unit:degC",
+	"windSpeed": "1.5 mph",
+	"windDirection": 270,
+	"windDirectionUnit": "unit:degree_(angle)",
+	"icon": "https://api.weather.gov/icons/land/night/skc?size=medium"
+}, {
+	"number": 2,
+	"name": "",
+	"startTime": "2020-02-03T04:53:00+00:00",
+	"endTime": "2020-02-03T04:53:00+00:00",
+	"timestamp": "2020-02-03T04:53:00+00:00",
+	"temperature": 2.2000000000000455,
+	"temperatureUnit": "unit:degC",
+	"windSpeed": "3.1 mph",
+	"windDirection": 260,
+	"windDirectionUnit": "unit:degree_(angle)",
+	"icon": "https://api.weather.gov/icons/land/night/skc?size=medium"
+}]
+```
+#### Method parameter
+
+* **startTime** : String. Start time. YYYY-MM-DD'T'hh:mmTZD. Check ISO8601 for more info.
+* **Endtime** : String. End time. YYYY-MM-DD'T'hh:mmTZD. Check ISO8601 for more info.
+* **limit** : integer. How many historical weather data from now you want to get. The number of data may less than your setting.
