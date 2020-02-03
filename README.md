@@ -1,6 +1,7 @@
 # api-design-PupilTong
 api-design-PupilTong created by GitHub Classroom
-
+## User Stories
+As a developer, I may implement an RSS on my website to privides user weather information.
 ## Preparation
 ### download essential files
 ```bash
