@@ -34,7 +34,7 @@ The return of this method will be a json string, like this
 {"iata_code": "BOS", "id": "3422", "ident": "KBOS", "type": "large_airport", "name": "General Edward Lawrence Logan International Airport", "locate": {"latitude_deg": "42.36429977", "longitude_deg": "-71.00520325", "elevation_ft": "20", "continent": "NA", "iso_country": "US", "iso_region": "US-MA", "municipality": "Boston"}, "scheduled_service": "yes", "gps_code": "KBOS", "local_code": "BOS", "internet_info": {"home_link": "http://www.massport.com/logan/", "wikipedia_link": "https://en.wikipedia.org/wiki/Logan_International_Airport", "keywords": ["General", "Edward", "Lawrence", "Logan", "International", "Airport"]}}
 ```
 ### Get current weather
-Get current weather of the airport.
+Get current weather of the airport. Data comes form open weather api.
 ```python
 airportWeather("ORD",openWeatherKeys=openWeatherKeys).GetCurrentWeather()
 ```
@@ -55,3 +55,27 @@ The return of this method will be a json string, like this
 | sunset  | Sunset time  | unix, UTC  |
 | timeStamp  |  | unix, UTC  |
 | speed  | wind speed | meter/sec |
+
+### Get weather forecast
+Get weather forecast of the airport. Data comes form https://api.weather.gov/.
+```python
+airportWeather("ORD").GetForcast()
+```
+The return of this method will be a json string, like this
+```json
+[{
+	"number": 1,
+	"name": "Tonight",
+	"startTime": "2020-02-02T21:00:00-05:00",
+	"endTime": "2020-02-03T06:00:00-05:00",
+	"isDaytime": false,
+	"temperature": 34,
+	"temperatureUnit": "F",
+	"temperatureTrend": null,
+	"windSpeed": "8 mph",
+	"windDirection": "W",
+	"icon": "https://api.weather.gov/icons/land/night/bkn?size=medium",
+	"shortForecast": "Mostly Cloudy",
+	"detailedForecast": "Mostly cloudy, with a low around 34. West wind around 8 mph."
+}]
+```
