@@ -1,8 +1,11 @@
-import json,csv
+import json,csv,requests
 import importlib
+from apikeys import *
 class airportWeather:
     __airportInfo__:dict = {}
-    def __init__(self,airportIATACode:str):
+    openWeatherKeys : str = ""
+    def __init__(self,airportIATACode:str,openWeatherKeys=""):
+        self.openWeatherKeys = openWeatherKeys
         with open('airports.csv',newline='',errors='ignore',encoding='utf-8') as csvfile:
             spamreader = csv.reader(csvfile, delimiter=',',quotechar='"')
             title = spamreader.__next__()
@@ -70,6 +73,41 @@ class airportWeather:
     def GetAirportInfo(self) -> str:
         return json.dumps(self.__airportInfo__)
     pass
+    def GetCurrentWeather(self) ->str:
+        try:
+            response = requests.get("https://api.openweathermap.org/data/2.5/weather?lat="+ str(self.__airportInfo__["locate"]['latitude_deg']) +"&lon=" + str(self.__airportInfo__["locate"]['longitude_deg']) +"&appid=" +  self.openWeatherKeys )
+        except:
+            raise Exception("Error: Internet Connection failed")
+        if(response.status_code==200):
+            try:
+                response = response.json()
+                result :dict= {}
+                result["air"]=response["main"]
+                result["air"].pop("feels_like")
+                result["clouds"]=response["clouds"]["all"]
+                result["weather"]=response["weather"][0]
+                result["wind"]=response["wind"]
+                result["sun"]={}
+                result["sun"]["sunrise"]=response["sys"]["sunrise"]
+                result["sun"]["sunset"]=response["sys"]["sunset"]
+                result["timeStamp"] = response["dt"]
+                return json.dumps(result)
+            except :
+                raise Exception("Error: api decoding failed, try to get the latest version of this library")
+            #printresponse[""]
+        else:
+            raise Exception("Error:  OpenWeather API Quest Failed")
+        pass
+    def GetForcast(self) ->str:
+        response = requests.get("https://api.weather.gov/points/" + str(self.__airportInfo__["locate"]['latitude_deg']) + "," + str(self.__airportInfo__["locate"]['longitude_deg']))
+        
+        pass
+    def GetForcastHourly(self) ->str:
+        pass
+    def GetHistoricalWeather(self) ->str:
+        pass
+
 if __name__ == '__main__':
-    apw = airportWeather("BOS")
+    apw = airportWeather("ORD",openWeatherKeys=openWeatherKeys)
     print(apw.GetAirportInfo())
+    print(apw.GetCurrentWeather())
