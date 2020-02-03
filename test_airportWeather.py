@@ -19,4 +19,11 @@ def test_GetForcastHourly():
     assert type(airportWeather("ORD").GetForcastHourly())==type("string")
     assert len(json.loads(airportWeather("ORD").GetForcastHourly(2)))==2
     with pytest.raises(Exception):
-        assert(airportWeather("PKX").GetForcast())
+        assert(airportWeather("PKX").GetForcastHourly())
+def test_GetHistoricalWeather():
+    assert type(airportWeather("ORD").GetHistoricalWeather("2020-02-01T23:00:00-06:00","2020-02-02T23:00:00-06:00",2))==type("string")
+    assert len(json.loads(airportWeather("ORD").GetHistoricalWeather("2020-02-01T23:00:00-06:00","2020-02-02T23:00:00-06:00",2)))==2
+    with pytest.raises(Exception):
+        assert(airportWeather("PKX").GetForcastHourly())
+        assert(airportWeather("ORD").GetHistoricalWeather("","",2))
+        assert(airportWeather("ORD").GetHistoricalWeather())

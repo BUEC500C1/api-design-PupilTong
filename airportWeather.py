@@ -1,5 +1,6 @@
 import json,csv,requests
 import importlib
+import datetime
 from apikeys import *
 class airportWeather:
     __airportInfo__:dict = {}
@@ -101,8 +102,13 @@ class airportWeather:
     def GetForcast(self) ->str:
         try:
             response = requests.get("https://api.weather.gov/points/" + str(self.__airportInfo__["locate"]['latitude_deg']) + "," + str(self.__airportInfo__["locate"]['longitude_deg']))
+            if(response.status_code!=200):
+                raise Exception("Error: Connection Error!")
             response = response.json()
-            response = requests.get(response["properties"]["forecast"]).json()
+            response = requests.get(response["properties"]["forecast"])
+            if(response.status_code!=200):
+                raise Exception("Error: Connection Error!")
+            response = response.json()
             return json.dumps(response["properties"]["periods"])
         except :
             raise Exception("Error: api decoding failed, try to get the latest version of this library")
@@ -110,13 +116,49 @@ class airportWeather:
     def GetForcastHourly(self,hours:int=6) ->str:
         try:
             response = requests.get("https://api.weather.gov/points/" + str(self.__airportInfo__["locate"]['latitude_deg']) + "," + str(self.__airportInfo__["locate"]['longitude_deg']))
+            if(response.status_code!=200):
+                raise Exception("Error: Connection Error!")
             response = response.json()
-            response = requests.get(response["properties"]["forecast"] + "/hourly").json()
+            response = requests.get(response["properties"]["forecast"] + "/hourly")
+            if(response.status_code!=200):
+                raise Exception("Error: Connection Error!")
+            response = response.json()
             return json.dumps(response["properties"]["periods"][0:hours])
         except :
             raise Exception("Error: api decoding failed, try to get the latest version of this library")
         pass
-    def GetHistoricalWeather(self) ->str:
+    def GetHistoricalWeather(self,startTime,Endtime,limit:int=10) ->str:
+        try:
+            response = requests.get("https://api.weather.gov/points/" + str(self.__airportInfo__["locate"]['latitude_deg']) + "," + str(self.__airportInfo__["locate"]['longitude_deg']))
+            if(response.status_code!=200):
+                raise Exception("Error: Connection Error!")
+            response = response.json()
+            response = requests.get(response["properties"]["forecastZone"] + "/observations?limit="+str(limit) + "&start=" + startTime + "&end=" + Endtime)
+            if(response.status_code!=200):
+                raise Exception("Error: Parameter Error!")
+            response = response.json()
+            result:list= []
+            count:int=1
+            for observation in response["features"]:
+                resultElement:dict= {}
+                resultElement["number"] = count
+                resultElement["name"]= ""
+                resultElement["startTime"] = observation["properties"]["timestamp"]
+                resultElement["endTime"] = observation["properties"]["timestamp"]
+                resultElement["timestamp"] = observation["properties"]["timestamp"]
+                resultElement["temperature"]= observation["properties"]["temperature"]["value"]
+                resultElement["temperatureUnit"]= observation["properties"]["temperature"]["unitCode"]
+                resultElement["windSpeed"]= str(observation["properties"]["windSpeed"]["value"]) + " mph"
+                resultElement["windDirection"]= observation["properties"]["windDirection"]["value"]
+                resultElement["windDirectionUnit"]= observation["properties"]["windDirection"]["unitCode"]
+                resultElement["icon"]= observation["properties"]["icon"]
+                resultElement["textDescription"]: observation["properties"]["textDescription"]
+                #resultElement["rawData"]= observation["properties"]
+                count = count + 1
+                result.append(resultElement)
+            return json.dumps(result)
+        except :
+            raise Exception("Error: api decoding failed, try to get the latest version of this library")
         pass
 
 if __name__ == '__main__':
@@ -124,4 +166,4 @@ if __name__ == '__main__':
     #print(apw.GetAirportInfo())
     #print(apw.GetCurrentWeather())
     #print(apw.GetForcast())
-    print(apw.GetForcastHourly(2))
+    print(apw.GetHistoricalWeather("2020-02-01T23:00:00-06:00","2020-02-02T23:00:00-06:00",2))
