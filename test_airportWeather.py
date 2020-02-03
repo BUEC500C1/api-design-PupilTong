@@ -8,6 +8,10 @@ def test_airportInfo():
         assert(airportWeather(""))
     
 def test_CurrentWeather():
-    assert type(airportWeather("ORD",openWeatherKeys=openWeatherKeys).GetCurrentWeather())==type("string")
+    #assert type(airportWeather("ORD",openWeatherKeys=openWeatherKeys).GetCurrentWeather())==type("string")
     with pytest.raises(Exception):
         assert(airportWeather("ORD").GetCurrentWeather())
+def test_GetForcast():
+    assert type(airportWeather("ORD").GetForcast())==type("string")
+    with pytest.raises(Exception):
+        assert(airportWeather("PKX").GetForcast())
