@@ -15,3 +15,8 @@ def test_GetForcast():
     assert type(airportWeather("ORD").GetForcast())==type("string")
     with pytest.raises(Exception):
         assert(airportWeather("PKX").GetForcast())
+def test_GetForcastHourly():
+    assert type(airportWeather("ORD").GetForcastHourly())==type("string")
+    assert len(json.loads(airportWeather("ORD").GetForcastHourly(2)))==2
+    with pytest.raises(Exception):
+        assert(airportWeather("PKX").GetForcast())

@@ -107,8 +107,14 @@ class airportWeather:
         except :
             raise Exception("Error: api decoding failed, try to get the latest version of this library")
         pass
-    def GetForcastHourly(self) ->str:
-        
+    def GetForcastHourly(self,hours:int=6) ->str:
+        try:
+            response = requests.get("https://api.weather.gov/points/" + str(self.__airportInfo__["locate"]['latitude_deg']) + "," + str(self.__airportInfo__["locate"]['longitude_deg']))
+            response = response.json()
+            response = requests.get(response["properties"]["forecast"] + "/hourly").json()
+            return json.dumps(response["properties"]["periods"][0:hours])
+        except :
+            raise Exception("Error: api decoding failed, try to get the latest version of this library")
         pass
     def GetHistoricalWeather(self) ->str:
         pass
@@ -117,4 +123,5 @@ if __name__ == '__main__':
     apw = airportWeather("ORD",openWeatherKeys=openWeatherKeys)
     #print(apw.GetAirportInfo())
     #print(apw.GetCurrentWeather())
-    print(apw.GetForcast())
+    #print(apw.GetForcast())
+    print(apw.GetForcastHourly(2))
