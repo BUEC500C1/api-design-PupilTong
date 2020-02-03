@@ -10,7 +10,7 @@ Import to your codes
 ```python
 import airportWeather
 ```
-### register an API key of Open Weather
+### register & get an API key of Open Weather
 check https://openweathermap.org/ for more infomation
 
 ## instructions
